@@ -1,0 +1,24 @@
+/* AION EVE v0.13.1 — Safari/iPhone containment fix.
+   Behavior and approved composition remain unchanged. */
+.brand > svg{
+  width:35px!important;
+  height:38px!important;
+  min-width:35px!important;
+  max-width:35px!important;
+  flex:0 0 35px!important;
+  display:block;
+  overflow:visible;
+  stroke:#eef7ff;
+  fill:none;
+  stroke-width:2;
+  filter:drop-shadow(0 0 12px rgba(94,71,255,.55));
+}
+.brand{min-width:0}
+.brand > div{min-width:0}
+
+@media(max-width:740px){
+  .shell{padding:0}
+  .viewport{border-radius:0;max-width:100vw}
+  .canvas-wrap{overflow:hidden}
+  .tap-tip{max-width:calc(100vw - 24px);text-align:center}
+}
