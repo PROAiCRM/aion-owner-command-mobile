@@ -1,5 +1,5 @@
-/* AION EVE v0.13.1 — Safari/iPhone containment fix.
-   Behavior and approved composition remain unchanged. */
+/* AION EVE v0.13.2 — Safari/iPhone layout containment.
+   Approved desktop composition remains unchanged. */
 .brand > svg{
   width:35px!important;
   height:38px!important;
@@ -16,9 +16,32 @@
 .brand{min-width:0}
 .brand > div{min-width:0}
 
-@media(max-width:740px){
-  .shell{padding:0}
-  .viewport{border-radius:0;max-width:100vw}
-  .canvas-wrap{overflow:hidden}
-  .tap-tip{max-width:calc(100vw - 24px);text-align:center}
+/* The two upper AION CORE objects must remain visually separate. */
+.node:has(button[aria-label="Стратегические цели"]){
+  --y:2%!important;
+}
+.node:has(button[aria-label="Проекты и задачи"]){
+  --y:21%!important;
+}
+
+/* iPhone portrait and landscape: contain the scaled desktop canvas. */
+@media(max-width:980px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .shell{width:100%;max-width:100vw;padding:0;overflow:hidden}
+  .viewport{
+    width:100%;
+    max-width:100vw;
+    border-radius:0;
+    overflow:hidden;
+    overscroll-behavior-x:none;
+  }
+  .canvas-wrap{
+    max-width:100vw;
+    overflow:hidden;
+  }
+  .tap-tip{
+    max-width:calc(100vw - 24px);
+    text-align:center;
+  }
+  .node button{touch-action:manipulation}
 }
