@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#020811">
+<title>AION EVE — безопасное обновление v0.12.1</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#020811;color:#f7f9ff}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(circle at 50% 0,rgba(89,49,215,.20),transparent 31rem),#020811}
+main{width:min(620px,100%);margin:auto;padding:calc(22px + env(safe-area-inset-top)) 15px calc(26px + env(safe-area-inset-bottom))}
+.card{padding:21px;border:1px solid #1a2c40;border-radius:20px;background:linear-gradient(155deg,#091827,#05111e);box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.logo{width:52px;height:52px;border-radius:17px;background:conic-gradient(#1dd0dc,#2b71ff,#8537ff,#1dd0dc);box-shadow:0 0 28px rgba(103,56,255,.45);position:relative}.logo:after{content:"";position:absolute;inset:12px;border-radius:50%;background:#06111d}
+h1{font-size:25px;line-height:1.12;margin:17px 0 8px}p{color:#94a2b5;line-height:1.5;margin:0}.step{margin-top:13px;padding:16px;border:1px solid #1a2c40;border-radius:15px;background:#071421}.step b{display:block;margin-bottom:8px}
+input[type=file]{width:100%;padding:14px;border:1px dashed #405b78;border-radius:12px;background:#06111d;color:#c2ccda}
+.status{margin-top:11px;padding:12px;border-radius:11px;background:#06111d;border:1px solid #1a2c40;font-size:13px;line-height:1.48;word-break:break-word}.wait{color:#f2bd5a}.good{color:#48e2a0;border-color:rgba(72,226,160,.34)}.bad{color:#ff7886;border-color:rgba(255,120,134,.36)}
+button,.download{width:100%;min-height:54px;margin-top:13px;border:1px solid #7040dc;border-radius:14px;background:linear-gradient(100deg,#471aa7,#2b68df);color:#fff;font-weight:800;font-size:15px;display:grid;place-items:center;text-decoration:none}button:disabled{opacity:.35;filter:grayscale(.5)}.secondary{background:#091827;border-color:#314965;color:#d7e3f2}.hidden{display:none!important}.small{margin-top:11px;color:#7f8da1;font-size:12px;line-height:1.45}code{color:#cebaff}
+</style>
+</head>
+<body><main>
+<section class="card">
+<div class="logo"></div>
+<h1>AION EVE v0.12.1</h1>
+<p>Эталон остаётся без изменений. Добавляются только увеличение существующих иконок при наведении или касании и мягкое открытие следующего раздела.</p>
+</section>
+<section class="step">
+<b>1. Выбери эталонный HTML</b>
+<input id="file" type="file" accept=".html,text/html">
+<div id="status" class="status wait">Нужен файл <code>AION_EVE_REFERENCE_EXACT_WORKING_PROTOTYPE_v0_12_0.html</code></div>
+</section>
+<section class="step">
+<b>2. Собери готовую версию</b>
+<button id="build" disabled>Собрать AION EVE v0.12.1</button>
+<a id="download" class="download hidden" download="AION_EVE_REFERENCE_EXACT_INTERACTION_v0_12_1.html">Скачать готовый HTML</a>
+<button id="share" class="secondary hidden">Поделиться / сохранить в Файлы</button>
+<div class="small">Исходный v0.12.0 не перезаписывается. Неправильный файл будет отклонён по SHA‑256.</div>
+</section>
+<script>
+const EXPECTED="1f5fb5204b9eea51086698c9a43f6cb96481af21adc5fc8347eb901dc8e16e73";
+const PATCH_ID="AION-EVE-REFERENCE-INTERACTION-v0.12.1";
+const PATCH_CSS=`
+/* ${PATCH_ID}: behavior only; approved visual remains unchanged */
+:root{--aion-touch-time:230ms;--aion-touch-ease:cubic-bezier(.16,.84,.28,1)}
+.project-art,.mini-icon,.arrow,.project-card,.module-card,.project-row{
+ transition:transform var(--aion-touch-time) var(--aion-touch-ease),filter var(--aion-touch-time) ease,box-shadow var(--aion-touch-time) ease,border-color var(--aion-touch-time) ease!important;
+ will-change:transform
+}
+.project-card:hover .project-art,.project-card:focus-within .project-art,.project-card.aion-touch-active .project-art{transform:translateY(-3px) scale(1.075);filter:saturate(1.06) contrast(1.05)}
+.module-card:hover .mini-icon,.module-card:focus-within .mini-icon,.module-card.aion-touch-active .mini-icon,.project-row:hover .mini-icon,.project-row:focus-within .mini-icon,.project-row.aion-touch-active .mini-icon{transform:translateY(-2px) scale(1.11);filter:saturate(1.05) brightness(1.05)}
+.project-card:hover .arrow,.project-card:focus-within .arrow,.project-card.aion-touch-active .arrow{transform:translateX(2px) scale(1.07)}
+.project-card.aion-touch-active,.module-card.aion-touch-active,.project-row.aion-touch-active{transform:translateY(-2px)}
+.project-card:focus-within .eve-hint,.module-card:focus-within .eve-hint,.project-card.aion-touch-active .eve-hint,.module-card.aion-touch-active .eve-hint{opacity:1;transform:none}
+#app.aion-nav-pending{opacity:.88;transform:translateY(3px) scale(.998);transition:opacity 150ms ease,transform 150ms ease}
+.space.aion-space-enter{animation:aionExactEnter 390ms var(--aion-touch-ease) both!important}
+@keyframes aionExactEnter{from{opacity:.60;transform:translateY(8px) scale(.997);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+@media(hover:none) and (pointer:coarse){.project-card.aion-touch-active .project-art{transform:translateY(-3px) scale(1.085)}.module-card.aion-touch-active .mini-icon,.project-row.aion-touch-active .mini-icon{transform:translateY(-2px) scale(1.12)}}
+@media(prefers-reduced-motion:reduce){.project-art,.mini-icon,.arrow,.project-card,.module-card,.project-row,#app,.space{animation:none!important;transition:none!important}}
+`;
+const PATCH_JS=`
+(() => {
+ 'use strict';
+ if(window.__AION_REFERENCE_INTERACTION_V0121__) return;
+ window.__AION_REFERENCE_INTERACTION_V0121__='${PATCH_ID}';
+ const app=document.getElementById('app');
+ if(!app) return;
+ const CARD='.project-card,.module-card,.project-row';
+ const delayed=new WeakSet();
+ const timers=new WeakMap();
+ function activate(card){
+   if(!card)return;
+   const old=timers.get(card);if(old)clearTimeout(old);
+   card.classList.remove('aion-touch-active');void card.offsetWidth;card.classList.add('aion-touch-active');
+   timers.set(card,setTimeout(()=>{card.classList.remove('aion-touch-active');timers.delete(card)},540));
+ }
+ document.addEventListener('pointerdown',e=>{const card=e.target.closest(CARD);if(card)activate(card)},true);
+ document.addEventListener('click',e=>{
+   const card=e.target.closest(CARD);
+   if(!card||matchMedia('(hover:hover)').matches||delayed.has(card)){
+     if(card&&delayed.has(card))delayed.delete(card);
+     return;
+   }
+   e.preventDefault();e.stopImmediatePropagation();activate(card);delayed.add(card);
+   app.classList.add('aion-nav-pending');
+   setTimeout(()=>card.click(),185);
+ },true);
+ const observer=new MutationObserver(()=>{
+   const space=app.querySelector('.space');if(!space)return;
+   space.classList.remove('aion-space-enter');void space.offsetWidth;space.classList.add('aion-space-enter');
+   setTimeout(()=>{space.classList.remove('aion-space-enter');app.classList.remove('aion-nav-pending')},430);
+ });
+ observer.observe(app,{childList:true,subtree:false});
+})();
+`;
+let source=null,outputFile=null,objectUrl=null;
+const fileInput=document.getElementById('file'),statusEl=document.getElementById('status'),buildBtn=document.getElementById('build'),download=document.getElementById('download'),share=document.getElementById('share');
+async function sha256(text){const data=new TextEncoder().encode(text);const hash=await crypto.subtle.digest('SHA-256',data);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')}
+function resetOutput(){download.classList.add('hidden');share.classList.add('hidden');if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=null;outputFile=null}
+fileInput.addEventListener('change',async()=>{
+ resetOutput();source=null;buildBtn.disabled=true;
+ const file=fileInput.files?.[0];if(!file)return;
+ statusEl.className='status wait';statusEl.textContent='Проверяю эталон…';
+ const text=await file.text();const digest=await sha256(text);
+ if(digest!==EXPECTED){statusEl.className='status bad';statusEl.innerHTML=`Это не утверждённый эталон.<br>Выбран: <code>${file.name}</code>`;return}
+ source=text;buildBtn.disabled=false;statusEl.className='status good';statusEl.textContent='Эталон подтверждён. Можно собирать v0.12.1.';
+});
+buildBtn.addEventListener('click',()=>{
+ if(!source)return;
+ if(source.includes(PATCH_ID)){statusEl.className='status bad';statusEl.textContent='Этот файл уже содержит v0.12.1.';return}
+ let output=source;
+ output=output.replace('</head>',`\n<style id="aion-reference-interaction-v0121">${PATCH_CSS}</style>\n</head>`);
+ output=output.replace('</body>',`\n<script id="aion-reference-interaction-v0121-script">${PATCH_JS}<\/script>\n</body>`);
+ output=output.replace('Reference Exact Prototype v0.12.0','Reference Exact Interaction v0.12.1');
+ outputFile=new File([output],'AION_EVE_REFERENCE_EXACT_INTERACTION_v0_12_1.html',{type:'text/html;charset=utf-8'});
+ objectUrl=URL.createObjectURL(outputFile);download.href=objectUrl;download.classList.remove('hidden');
+ if(navigator.canShare?.({files:[outputFile]}))share.classList.remove('hidden');
+ statusEl.className='status good';statusEl.textContent='Готово. Нажми «Скачать готовый HTML».';
+});
+share.addEventListener('click',async()=>{if(!outputFile)return;try{await navigator.share({files:[outputFile],title:'AION EVE v0.12.1'})}catch(e){if(e.name!=='AbortError'){statusEl.className='status bad';statusEl.textContent='Не получилось открыть меню. Используй кнопку скачивания.'}}});
+</script>
+</main></body></html>
