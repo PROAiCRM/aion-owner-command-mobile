@@ -10,6 +10,8 @@ const SCREENS={
  ]}
 };
 let current='home',scale=1;
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+function resetView(){const v=document.getElementById('viewport');if(v){v.scrollLeft=0;v.scrollTop=0}window.scrollTo(0,0);document.documentElement.scrollLeft=0;document.documentElement.scrollTop=0;document.body.scrollLeft=0;document.body.scrollTop=0}
 function icon(id){return `<svg viewBox="0 0 64 64"><use href="#${id}"></use></svg>`}
 function connections(nodes){return nodes.map(n=>`<line x1="50%" y1="49%" x2="${n[5]}%" y2="${n[6]}%"></line>`).join('')}
 function nodeHtml(n,i){return `<div class="node" style="--x:${n[5]}%;--y:${n[6]}%;--node:${n[3]}"><button data-target="${n[4]}" data-index="${i}" aria-label="${n[0]}"><div class="pedestal"><div class="orb">${icon(n[2])}</div></div><strong>${n[0]}</strong><small>${n[1]}</small></button></div>`}
@@ -25,9 +27,9 @@ function render(name){
  </section>
  <section class="bottom"><div class="panel"><div class="panel-title"><h3>Что изменилось</h3><small>смотреть всё</small></div><div class="event"><b>18:36</b><span>Обновлён рабочий контур</span></div><div class="event"><b>17:25</b><span>Добавлено доказательство</span></div><div class="event"><b>15:31</b><span>Закрыт следующий шаг</span></div><div class="event"><b>14:11</b><span>Проверены зависимости</span></div></div><div class="panel"><div class="panel-title"><h3>Пульс бизнеса</h3><small>7 дней</small></div><div class="kpis"><div class="kpi"><small>Заказы в работе</small><b>128</b></div><div class="kpi"><small>Завершено ремонтов</small><b>97</b></div><div class="kpi"><small>Средний срок ремонта</small><b>2,6 ч</b></div><div class="kpi"><small>NPS клиентов</small><b>72</b></div></div>${chart()}</div><div class="panel"><div class="panel-title"><h3>Доказательства и ресурсы</h3><small>смотреть всё</small></div><div class="resource"><span>Регламент мобильной приёмки</span><b>Документ</b></div><div class="resource"><span>Шаблон квитанции</span><b>Шаблон</b></div><div class="resource"><span>Инструкция распознавания модели</span><b>Отчёт</b></div><div class="resource"><span>Видео рабочего сценария</span><b>Видео</b></div></div></section>
  <footer class="footer"><span>AION EVE</span><div class="roadmap"><span><i>1</i>Закрепление актуальной системы</span><span><i>2</i>Интерактивный прототип</span><span><i>3</i>Реальный пилот</span><span><i>4</i>Мобильный MVP</span><span><i>5</i>Тестирование</span><span><i>6</i>Запуск</span></div><span>Система работает стабильно</span></footer>`;
- bind();fit();
+ bind();fit();requestAnimationFrame(resetView);
 }
-function go(name){if(name===current)return;const canvas=document.getElementById('canvas');canvas.classList.add('changing');setTimeout(()=>{current=name;render(name);canvas.classList.remove('changing')},190)}
+function go(name){if(name===current){resetView();return}const canvas=document.getElementById('canvas');canvas.classList.add('changing');setTimeout(()=>{current=name;render(name);resetView();setTimeout(resetView,120);canvas.classList.remove('changing')},190)}
 function bind(){
  document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>go(b.dataset.nav));
  document.querySelectorAll('.node button').forEach(btn=>{
@@ -37,4 +39,4 @@ function bind(){
  });
 }
 function fit(){const v=document.getElementById('viewport'),w=document.getElementById('canvasWrap'),c=document.getElementById('canvas');scale=Math.min(1,(v.clientWidth-2)/1440);w.style.width=(1440*scale)+'px';w.style.height=(c.offsetHeight*scale)+'px';c.style.transform=`scale(${scale})`;c.style.transformOrigin='top left'}
-window.addEventListener('resize',fit);render('home');setTimeout(()=>document.getElementById('tip').style.display='none',6500);
+window.addEventListener('resize',()=>{fit();resetView()});window.addEventListener('pageshow',resetView);render('home');setTimeout(()=>document.getElementById('tip').style.display='none',6500);
