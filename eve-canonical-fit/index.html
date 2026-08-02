@@ -4,33 +4,72 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#020712">
-<title>AION EVE — Canonical Fit v0.13.6</title>
+<title>AION EVE — Canonical Fit v0.13.7</title>
 <style>
 :root{background:#020712;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;background:#020712}
 #host{width:100%;overflow:hidden;background:#020712}
-#stage{width:1440px;height:1120px;transform-origin:top left;will-change:transform}
-iframe{display:block;width:1440px;height:1120px;border:0;background:#020712;overflow:hidden}
+#stage{width:1440px;height:900px;transform-origin:top left;will-change:transform}
+iframe{display:block;width:1440px;height:900px;border:0;background:#020712;overflow:hidden}
 </style>
 </head>
 <body>
-<div id="host"><div id="stage"><iframe id="app" title="AION EVE" src="../eve-canonical-live/?v=0136" scrolling="no"></iframe></div></div>
+<div id="host"><div id="stage"><iframe id="app" title="AION EVE" src="../eve-canonical-live/?v=0137" scrolling="no"></iframe></div></div>
 <script>
 (()=>{
- const BASE_W=1440,BASE_H=1120,host=document.getElementById('host'),stage=document.getElementById('stage'),frame=document.getElementById('app');
+ const BASE_W=1440;
+ const host=document.getElementById('host');
+ const stage=document.getElementById('stage');
+ const frame=document.getElementById('app');
+ let contentHeight=900;
+ let innerObserver=null;
+
  function viewportWidth(){
    const values=[window.innerWidth,document.documentElement.clientWidth,window.visualViewport&&window.visualViewport.width].filter(Boolean);
    return Math.floor(Math.min(...values));
  }
+
+ function measureInnerHeight(){
+   try{
+     const doc=frame.contentDocument;
+     if(!doc)return contentHeight;
+     const canvas=doc.getElementById('canvas');
+     const wrap=doc.getElementById('canvasWrap');
+     const screen=doc.getElementById('screen');
+     const measured=Math.ceil(Math.max(
+       canvas&&canvas.scrollHeight||0,
+       canvas&&canvas.offsetHeight||0,
+       wrap&&wrap.scrollHeight||0,
+       screen&&screen.scrollHeight||0,
+       doc.body&&doc.body.scrollHeight||0,
+       doc.documentElement&&doc.documentElement.scrollHeight||0,
+       900
+     ));
+     if(Number.isFinite(measured)&&measured>0)contentHeight=measured;
+   }catch(e){}
+   return contentHeight;
+ }
+
  function fit(){
    const w=Math.max(320,viewportWidth());
    const scale=Math.min(1,w/BASE_W);
+   const h=measureInnerHeight();
+   stage.style.width=BASE_W+'px';
+   stage.style.height=h+'px';
    stage.style.transform=`scale(${scale})`;
+   frame.style.width=BASE_W+'px';
+   frame.style.height=h+'px';
    host.style.width=w+'px';
-   host.style.height=Math.ceil(BASE_H*scale)+'px';
-   window.scrollTo(0,0);
+   host.style.height=Math.ceil(h*scale)+'px';
  }
+
+ function resetOuter(){
+   window.scrollTo(0,0);
+   document.documentElement.scrollTop=0;
+   document.body.scrollTop=0;
+ }
+
  function bindInner(){
    try{
      const win=frame.contentWindow;
@@ -40,21 +79,35 @@ iframe{display:block;width:1440px;height:1120px;border:0;background:#020712;over
        doc.body.style.overflowX='hidden';
        const viewport=doc.getElementById('viewport');
        if(viewport){viewport.style.overflowX='hidden';viewport.scrollLeft=0;}
+       const observed=doc.getElementById('canvas')||doc.body;
+       if(innerObserver)innerObserver.disconnect();
+       if(window.ResizeObserver&&observed){
+         innerObserver=new ResizeObserver(()=>requestAnimationFrame(fit));
+         innerObserver.observe(observed);
+       }
      }
      if(win&&typeof win.go==='function'&&!win.__aionOuterReset){
        const original=win.go;
-       win.go=function(name){window.parent.scrollTo(0,0);return original.call(win,name)};
+       win.go=function(name){
+         resetOuter();
+         const result=original.call(win,name);
+         setTimeout(()=>{measureInnerHeight();fit();resetOuter();},260);
+         return result;
+       };
        win.__aionOuterReset=true;
      }
    }catch(e){}
+   measureInnerHeight();
    fit();
+   resetOuter();
+   setTimeout(()=>{measureInnerHeight();fit();},300);
  }
+
  frame.addEventListener('load',bindInner);
  window.addEventListener('resize',fit,{passive:true});
  window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});
  if(window.visualViewport)window.visualViewport.addEventListener('resize',fit,{passive:true});
  fit();
- setTimeout(fit,250);
 })();
 </script>
 </body>
