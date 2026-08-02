@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#020712">
+<title>AION EVE — Canonical Fit v0.13.6</title>
+<style>
+:root{background:#020712;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;overflow-x:hidden;background:#020712}
+#host{width:100%;overflow:hidden;background:#020712}
+#stage{width:1440px;height:1120px;transform-origin:top left;will-change:transform}
+iframe{display:block;width:1440px;height:1120px;border:0;background:#020712;overflow:hidden}
+</style>
+</head>
+<body>
+<div id="host"><div id="stage"><iframe id="app" title="AION EVE" src="../eve-canonical-live/?v=0136" scrolling="no"></iframe></div></div>
+<script>
+(()=>{
+ const BASE_W=1440,BASE_H=1120,host=document.getElementById('host'),stage=document.getElementById('stage'),frame=document.getElementById('app');
+ function viewportWidth(){
+   const values=[window.innerWidth,document.documentElement.clientWidth,window.visualViewport&&window.visualViewport.width].filter(Boolean);
+   return Math.floor(Math.min(...values));
+ }
+ function fit(){
+   const w=Math.max(320,viewportWidth());
+   const scale=Math.min(1,w/BASE_W);
+   stage.style.transform=`scale(${scale})`;
+   host.style.width=w+'px';
+   host.style.height=Math.ceil(BASE_H*scale)+'px';
+   window.scrollTo(0,0);
+ }
+ function bindInner(){
+   try{
+     const win=frame.contentWindow;
+     const doc=frame.contentDocument;
+     if(doc){
+       doc.documentElement.style.overflowX='hidden';
+       doc.body.style.overflowX='hidden';
+       const viewport=doc.getElementById('viewport');
+       if(viewport){viewport.style.overflowX='hidden';viewport.scrollLeft=0;}
+     }
+     if(win&&typeof win.go==='function'&&!win.__aionOuterReset){
+       const original=win.go;
+       win.go=function(name){window.parent.scrollTo(0,0);return original.call(win,name)};
+       win.__aionOuterReset=true;
+     }
+   }catch(e){}
+   fit();
+ }
+ frame.addEventListener('load',bindInner);
+ window.addEventListener('resize',fit,{passive:true});
+ window.addEventListener('orientationchange',()=>setTimeout(fit,120),{passive:true});
+ if(window.visualViewport)window.visualViewport.addEventListener('resize',fit,{passive:true});
+ fit();
+ setTimeout(fit,250);
+})();
+</script>
+</body>
+</html>
