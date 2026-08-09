@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="robots" content="noindex,nofollow,noarchive" />
+<meta name="theme-color" content="#0b0d10" />
+<title>AION DC-004 — Synthetic Mobile Owner Control</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--panel:#14181d;--panel2:#101419;--muted:#98a2ad;--text:#f4f7fb;--line:#29313a;--ok:#76d99b;--warn:#f0c36a;--bad:#ff9090;--accent:#8fb2ff;--r:20px}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;min-height:100svh;background:linear-gradient(180deg,#090b0e,#101318);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-text-size-adjust:100%}.app{max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 30px)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.brand{font-weight:800;letter-spacing:.1px}.tag{font-size:11px;color:var(--warn);border:1px solid #5a4826;border-radius:999px;padding:6px 9px;white-space:nowrap}.card{background:rgba(20,24,29,.97);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:12px 0;box-shadow:0 10px 32px rgba(0,0,0,.23)}
+.kicker{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.75px}.title{font-size:clamp(25px,7vw,31px);line-height:1.08;font-weight:850;margin:6px 0 8px}.sub{color:#c6cdd5;line-height:1.48;font-size:14px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.pill{font-size:12px;border-radius:999px;padding:6px 9px;background:#1d232a;border:1px solid #303842}.pill.ok{color:var(--ok)}.pill.bad{color:var(--bad)}.pill.warn{color:var(--warn)}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.meta div{background:var(--panel2);border:1px solid #252d36;border-radius:14px;padding:11px;min-width:0}.meta b{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.35px}.meta span{display:block;font-size:13px;overflow-wrap:anywhere}.actions{display:grid;gap:10px;margin-top:14px}.btn{width:100%;min-height:52px;border:0;border-radius:15px;font-weight:800;font-size:16px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}.btn:focus-visible,.switcher button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.primary{background:#f4f7fb;color:#0c0e11}.secondary{background:#1d232a;color:var(--text);border:1px solid #35404c}.danger{background:#2a1719;color:#ffc0c0;border:1px solid #603237}.btn:disabled{opacity:.48;cursor:not-allowed}
+.progress{height:8px;background:#222831;border-radius:999px;overflow:hidden;margin-top:14px}.bar{height:100%;background:linear-gradient(90deg,#7ea7ff,#b6cbff);width:8%;transition:width .28s ease}.list{display:grid;gap:0;margin-top:12px}.item{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #272e36;font-size:14px}.item:last-child{border-bottom:0}.item span:last-child{color:#cdd3da;text-align:right;overflow-wrap:anywhere}.evidence{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:#0d1115;border:1px solid #28313a;border-radius:14px;padding:12px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.switcher{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.switcher::-webkit-scrollbar{display:none}.switcher button{min-height:44px;white-space:nowrap;background:#171c22;color:#d0d6dd;border:1px solid #303842;border-radius:999px;padding:9px 12px;font-size:12px}.switcher button.active{background:#eef3fb;color:#101317}.foot{font-size:12px;color:var(--muted);text-align:center;line-height:1.45;margin-top:20px}.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px}.toggle input{width:24px;height:24px}.note{font-size:12px;color:var(--warn);margin-top:10px;line-height:1.45}
+@media (max-width:370px){.meta{grid-template-columns:1fr}.app{padding-left:12px;padding-right:12px}.tag{font-size:10px}}
+@media (orientation:landscape) and (max-height:500px){.app{max-width:760px}.meta{grid-template-columns:repeat(4,1fr)}.title{font-size:24px}.card{padding:14px}.actions{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top"><div class="brand">AION Development Control</div><div class="tag">SYNTHETIC ONLY</div></header>
+  <nav class="switcher" id="switcher" aria-label="Синтетические сценарии"></nav>
+
+  <section class="card" aria-labelledby="stateTitle">
+    <div class="kicker" id="kicker">READY</div>
+    <h1 class="title" id="stateTitle">Готово к проверке</h1>
+    <div class="sub" id="subtitle">Детерминированный прототип. Реальный runner, CRM и приватные репозитории не вызываются.</div>
+    <div class="row" style="margin-top:12px"><span class="pill" id="profile">P0</span><span class="pill" id="statusPill" aria-live="polite">READY</span><span class="pill ok" id="freshPill">SOURCE FRESH</span></div>
+    <div class="meta">
+      <div><b>Mission</b><span id="mission">Synthetic verification mission</span></div>
+      <div><b>Execution surface</b><span id="surface">Synthetic preview</span></div>
+      <div><b>Repository</b><span id="repository">PRIVATE TARGET / REDACTED</span></div>
+      <div><b>Exact source</b><span id="sha">demo-sha-004</span></div>
+    </div>
+    <div class="progress" aria-label="Прогресс сценария"><div class="bar" id="bar"></div></div>
+    <div class="actions" id="actions"></div>
+  </section>
+
+  <section class="card" aria-labelledby="evidenceTitle">
+    <div class="kicker" id="evidenceTitle">Evidence first</div>
+    <div class="list" id="facts"></div>
+    <pre class="evidence" id="receipt" aria-live="polite">receipt: NOT_CREATED
+class: NOT_RUN
+cleanup: NOT_RUN</pre>
+  </section>
+
+  <section class="card">
+    <div class="toggle"><div><div class="kicker">Accessibility</div><div class="sub">Reduced motion override</div></div><input id="reduced" type="checkbox" aria-label="Включить режим без анимации" /></div>
+    <div class="actions"><button class="btn secondary" id="reset" type="button">Сбросить сценарий</button></div>
+    <div class="note">Public preview содержит только synthetic UI. Нет backend, API, реальных данных, секретов или рабочего исполнения.</div>
+  </section>
+  <footer class="foot">DC-004 v0.1 • Public synthetic preview • Device QA pending</footer>
+</main>
+<script>
+const scenarios={
+ READY:{label:'Ready',k:'READY',t:'Готово к проверке',s:'Все входные данные разрешены для synthetic-демо. Реальное выполнение не запускается.',profile:'P0',status:'READY',fresh:'SOURCE FRESH',bar:8,receipt:'receipt: NOT_CREATED\nclass: NOT_RUN\ncleanup: NOT_RUN',facts:[['Следующий шаг','Запустить проверку'],['Owner gate','Не требуется'],['Security','Admission pending']],actions:[['Запустить проверку','primary','RUNNING'],['Что будет проверено','secondary','READY']]},
+ RUNNING:{label:'Running',k:'RUNNING',t:'Проверка выполняется',s:'Показываем состояние и Evidence identity, но не поток терминала.',profile:'P0',status:'RUNNING',fresh:'SOURCE FRESH',bar:52,receipt:'execution: DC004-DEMO-001\nclass: SYNTHETIC_EXECUTED\ncurrent_gate: source_manifest\ncleanup: PENDING',facts:[['Текущий gate','Source manifest'],['Execution ID','DC004-DEMO-001'],['Время','00:41']],actions:[['Обновить статус','primary','PASS'],['Остановить','danger','STOPPED']]},
+ PASS:{label:'Pass',k:'PASS',t:'Проверка пройдена',s:'Успех показывается только вместе с exact source, Evidence и cleanup.',profile:'P0',status:'PASS',fresh:'SOURCE FRESH',bar:100,receipt:'receipt: DC004-R-001\nclass: SYNTHETIC_EXECUTED\nexact_source: demo-sha-004\ncleanup: PASS\nclaims_allowed: synthetic UX state only',facts:[['Exact source','demo-sha-004'],['Cleanup','PASS'],['Evidence','DC004-R-001']],actions:[['Открыть доказательства','primary','PASS'],['Следующий безопасный шаг','secondary','READY']]},
+ FAIL:{label:'Fail',k:'FAIL',t:'Найдена проблема',s:'Первым показывается первый материальный сбой, а не длинный необработанный лог.',profile:'P0',status:'FAIL',fresh:'SOURCE FRESH',bar:68,receipt:'receipt: DC004-R-002\nclass: SYNTHETIC_EXECUTED\nfirst_failure: source_manifest_stale\ncleanup: PASS\nblind_retry: BLOCKED',facts:[['Где','Source manifest'],['Причина','Stale provenance'],['Retry','Нужна root-cause decision']],actions:[['Открыть доказательства','primary','FAIL'],['Retry заблокирован','secondary','FAIL']]},
+ BLOCKED:{label:'Blocked',k:'BLOCKED',t:'Проверка заблокирована',s:'Среда недоступна до product execution — это не ошибка исходного кода.',profile:'P0',status:'BLOCKED',fresh:'SOURCE FRESH',bar:18,receipt:'receipt: DC004-R-003\nclass: ENVIRONMENT_BLOCKED\nproduct_execution: NOT_RUN\ncleanup: PASS',facts:[['Причина','Runner unavailable'],['Product code','NOT RUN'],['Next','Восстановить среду']],actions:[['Проверить среду','primary','READY']]},
+ STALE:{label:'Stale',k:'STALE',t:'Результат относится к другой версии',s:'Старый PASS не переносится на новый exact source.',profile:'CORE',status:'BLOCKED',fresh:'STALE SOURCE',bar:0,receipt:'receipt: DC004-R-OLD\nreceipt_source: demo-sha-003\ncurrent_source: demo-sha-004\nclaim_current_pass: FORBIDDEN',facts:[['Receipt source','demo-sha-003'],['Current source','demo-sha-004'],['Действие','Freshness required']],actions:[['Обновить источник','primary','READY']]},
+ DUPLICATE:{label:'Duplicate tap',k:'IDEMPOTENT',t:'Проверка уже запущена',s:'Повторный тап привязан к существующему execution ID.',profile:'P0',status:'RUNNING',fresh:'SOURCE FRESH',bar:44,receipt:'execution: DC004-DEMO-001\nduplicate_request: ATTACHED\nnew_expensive_run: NO',facts:[['Первый запрос','Принят'],['Повторный запрос','Attached'],['Execution ID','DC004-DEMO-001']],actions:[['Статус','primary','RUNNING']]},
+ CLEANUP:{label:'Cleanup fail',k:'PARTIAL',t:'Проверено не всё',s:'Проверки прошли, но cleanup не доказан — PASS запрещён.',profile:'P0',status:'PARTIAL',fresh:'SOURCE FRESH',bar:94,receipt:'receipt: DC004-R-004\ngates: PASS\ncleanup: FAIL\nfinal_pass: FORBIDDEN',facts:[['Gates','PASS'],['Cleanup','FAIL'],['Verdict','PARTIAL']],actions:[['Выполнить cleanup','primary','PASS']]},
+ OWNER:{label:'Owner gate',k:'OWNER GATE',t:'Нужно решение владельца',s:'Чувствительное действие не исполняется без явного подтверждения.',profile:'P0',status:'BLOCKED',fresh:'SOURCE FRESH',bar:28,receipt:'proposal: bounded sensitive action\nowner_gate: REQUIRED\nauto_execute: NO',facts:[['Действие','Bounded gate'],['Обратимость','Ограниченная'],['Статус','WAITING_OWNER']],actions:[['Подтвердить','primary','RUNNING'],['Отклонить','secondary','BLOCKED']]},
+ PHYSICAL:{label:'Physical',k:'PHYSICAL_REQUIRED',t:'Нужна проверка на реальном устройстве',s:'Симуляция не может доказать iPhone / Safari / PWA claim.',profile:'PHYSICAL_REQUIRED',status:'BLOCKED',fresh:'SOURCE FRESH',bar:72,receipt:'class: BROWSER_SIMULATED\nphysical_device: NOT_RUN\nclaim_physical_pass: FORBIDDEN',facts:[['Уже проверено','Browser simulated'],['Не проверено','Physical iPhone'],['Next','Physical QA']],actions:[['Открыть план QA','primary','PHYSICAL']]},
+ REDACTION:{label:'Redaction',k:'SECURITY BLOCK',t:'Экспорт Evidence заблокирован',s:'Безопасность выше удобства: потенциально чувствительный артефакт не показывается.',profile:'CORE',status:'BLOCKED',fresh:'SOURCE FRESH',bar:83,receipt:'redaction: FAIL\nartifact_export: BLOCKED\nraw_payload: HIDDEN',facts:[['Redaction','FAIL'],['Export','BLOCKED'],['Raw data','HIDDEN']],actions:[['Повторить redaction','primary','REDACTION']]},
+ STOPPED:{label:'Stop',k:'CANCELLED',t:'Проверка остановлена',s:'STOP сохраняет частичное Evidence и запускает cleanup. Это не успех.',profile:'P0',status:'CANCELLED',fresh:'SOURCE FRESH',bar:41,receipt:'execution: DC004-DEMO-005\nstatus: CANCELLED\npartial_evidence: PRESERVED\ncleanup: PASS',facts:[['Partial Evidence','Preserved'],['Cleanup','PASS'],['PASS claim','FORBIDDEN']],actions:[['Вернуться к готовности','primary','READY']]}
+};
+let current='READY';
+const $=id=>document.getElementById(id);
+function setCurrent(next){current=next;render();window.scrollTo({top:0,behavior:document.documentElement.dataset.reduced==='1'?'auto':'smooth'});}
+function render(){const x=scenarios[current];$('kicker').textContent=x.k;$('stateTitle').textContent=x.t;$('subtitle').textContent=x.s;$('profile').textContent=x.profile;$('statusPill').textContent=x.status;$('freshPill').textContent=x.fresh;$('bar').style.width=x.bar+'%';$('receipt').textContent=x.receipt;$('facts').innerHTML=x.facts.map(v=>`<div class="item"><span>${v[0]}</span><span>${v[1]}</span></div>`).join('');$('actions').innerHTML='';x.actions.forEach(a=>{const b=document.createElement('button');b.type='button';b.className='btn '+a[1];b.textContent=a[0];b.setAttribute('aria-label',a[0]);b.onclick=()=>setCurrent(a[2]);$('actions').appendChild(b)});document.querySelectorAll('#switcher button').forEach(b=>{const active=b.dataset.key===current;b.classList.toggle('active',active);b.setAttribute('aria-current',active?'true':'false')});const bad=['FAIL','BLOCKED','PARTIAL','CANCELLED'].includes(x.status);$('statusPill').className='pill '+(x.status==='PASS'?'ok':bad?'bad':'warn');$('freshPill').className='pill '+(x.fresh.includes('STALE')?'bad':'ok')}
+Object.entries(scenarios).forEach(([k,v])=>{const b=document.createElement('button');b.type='button';b.textContent=v.label;b.dataset.key=k;b.onclick=()=>setCurrent(k);$('switcher').appendChild(b)});
+$('reset').onclick=()=>setCurrent('READY');$('reduced').onchange=e=>{document.documentElement.dataset.reduced=e.target.checked?'1':'0';document.documentElement.style.scrollBehavior=e.target.checked?'auto':'smooth'};render();
+</script>
+</body>
+</html>
